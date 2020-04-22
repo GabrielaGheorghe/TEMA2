@@ -102,8 +102,8 @@ int main(int args, char* arg[])
 {
 
 	FILE *file_in, *file_out;
-	file_in = fopen(arg[1], "r");
-	file_out = fopen(arg[2], "w");
+	file_in = fopen(arg[1], "rt");
+	file_out = fopen(arg[2], "wt");
 	char line[256];
 	int bandwidth = 1024;
 	TLG first;
@@ -161,16 +161,18 @@ int main(int args, char* arg[])
 				line[len - 1] = '\0';
 				len --;
 			}
-		//	printf("%s\n", command);
+			command[strlen(command)-1] = '\0';
 			if(strcmp(command, "newtab") == 0)
 			{
-			
-				for(p = first; p != NULL; p = p->urm);
-					p->urm = newtab(sizeof(T_tab));
-				
+				for(p = first; p->urm != NULL; p = p->urm);//parcurg lista pana ajung pe ultima celula diferita de null,adica p->urm == null
+					
+				p->urm = newtab(sizeof(T_tab));//adaug celula noua la sfarsit
+				nr = 0;
+				//numar celule de tip tab
 				for(p = first; p != NULL; p=p->urm)
 					nr++;
-				printf("%d\n", nr);
+				
+				printf("exista %d taburi\n", nr);
 			}
 
 				// for(p = first; p != NULL; p=p->urm)
