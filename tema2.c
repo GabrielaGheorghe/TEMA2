@@ -109,32 +109,27 @@ int main(int args, char* arg[])
 
 				//delay(1); intarziere cu o secunda
 				T_tab *info_tab = (T_tab*)(current_tab->info);
-				if(info_tab->current_page != NULL)
-				{
-					
-					if(info_tab->back_stack == NULL) // daca este prima pagina accesata din acel tab
-					{
-						
-						info_tab->back_stack = InitS(sizeof(web_page)); // creeaza stiva de back
-						Push(info_tab->back_stack, info_tab->current_page); // adauga pagina curenta in stiva de back
-						info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent
-					}
-
-					else
-					{
-						Push(info_tab->back_stack, info_tab->current_page); // adauga pagina curenta in stiva de back
-						info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent	
-					}
-				}
-				else
+				if(info_tab->current_page == NULL)
 				  info_tab->current_page = CreatePage(command);
 
-			 // TStiva* s = (TStiva*)(info_tab->back_stack);
-			 // nr = 0;
-			 // TLG g;
-			 // if(s->vf)
-			 // 	nr++;
-			 // printf("%d\n", nr);
+				if(info_tab->back_stack == NULL) // daca este prima pagina accesata din acel tab
+				{	
+					info_tab->back_stack = InitS(sizeof(web_page)); // creeaza stiva de back
+					Push(info_tab->back_stack, info_tab->current_page); // adauga pagina curenta in stiva de back
+					info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent
+				}
+				else
+				{
+					Push(info_tab->back_stack, info_tab->current_page); // adauga pagina curenta in stiva de back
+					info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent	
+				}
+				
+			  TStiva* s = (TStiva*)(info_tab->back_stack);
+			  nr = 0;
+			  if(s->vf)
+			  	nr++;
+			  
+			  printf("%d\n",nr);
 
 			}
 				
