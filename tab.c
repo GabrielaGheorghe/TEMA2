@@ -9,25 +9,39 @@
 
 // initializare stiva
 
-// void *InitS(size_t d)
-// {
-// 	ASt S;
-// 	S = (ASt)malloc(sizeof(TStiva));
-// 	if(!S)
-// 		return NULL;
-// 	S->dime = d;
-// 	S->vf = NULL;
-// 	return (void*)S;
-// }
+void *InitS(size_t d)
+{
+	ASt S;
+	S = (ASt)malloc(sizeof(TStiva));
+	if(!S)
+		return NULL;
+	S->dime = d;
+	S->vf = NULL;
+	return (void*)S;
+}
+
+int Push(void *S, void *element)
+{
+	TLG aux = (TLG)malloc(sizeof(TCelulaG));
+	if(!aux)
+		return 0;
+	aux->info = malloc(((TStiva*)S)->dime);
+	if(!aux->info)
+	{
+		free(aux);
+		return 0;
+	}
+	memcpy(aux->info, element, ((TStiva*)S)->dime);
+	aux->urm = ((TStiva*)S)->vf;
+	((TStiva*)S)->vf = aux;
+	return 1;
+}
 
 // deschidere tab nou
 
 TLG newtab(size_t d)
 {
 
-	//TLG p = *first;
-	//TLG ultim = NULL;
-	
 	TLG aux = (TLG)malloc(sizeof(TCelulaG));
 	if(!aux)
 		return NULL;
@@ -50,27 +64,10 @@ TLG newtab(size_t d)
 	info_tab->forward_stack = NULL;
 	aux->urm = NULL;
 
-
-	// if(p == NULL)
-	// {
-	// 	*first = aux;
-	// }
-	// if(p != NULL)
-	// 	{
-
-		// 	for(p = *first; p != NULL; p = p->urm)
-		// 	{
-		// 		if(p->urm == NULL)
-		// 		{
-					
-		// 			ultim = p;
-		// 		}
-				
-		// 	}
-		// ultim->urm = aux;
-		//}
 return aux;
 }
+
+// printare tab-uri exiatente
 
 void print_open_tabs(TLG first_tab)
 {
@@ -87,51 +84,23 @@ void print_open_tabs(TLG first_tab)
 		{
 			printf("(%d: %s)\n", i, info_tab->current_page->url);
 		}
-
 	}
 }
 
+//creare pagina web
 
-// web_page *CreatePage(char *url)
-
-// {
-// 	web_page *one_page = (T_webpage)malloc(sizeof(web_page));
-// 	if(!one_page)
-// 		return NULL;
-// 	one_page->url = malloc(sizeof(30));
-// 	if(!one_page->url)
-// 	{
-// 		free(one_page);
-// 		return NULL;
-// 	}
-// 	strcpy(one_page->url, url);
-// 	one_page->resources = get_page_resources(url, &one_page->num_res);
-// 	return one_page;
-// }
-
-// T_tab *Aloca_tab()
-// {
-// 	 T_tab *info_tab = malloc(sizeof(T_tab));
-// 	if(!info_tab)
-// 		return;
-// 	info_tab->current_page = malloc(sizeof(web_page));
-// 	if(!info_tab)
-// 	{
-// 		free(info_tab);
-// 		return NULL;
-// 	}
-
-// }
-
-// void go_to(TLG *current_tab, char *name_url)
-// {
-// 	T_tab *info_tab = malloc(sizeof(T_tab));
-// 	if(!info_tab)
-// 		return;
-// 	info_tab = (T_tab*)((*current_tab)->info);
-// 	//printf("aici\n");
-// 	info_tab->current_page = malloc(sizeof(web_page));
-// 	if(!info_tab->current_page)
-// 		return;
-// 	info_tab->current_page = CreatePage(name_url);
-// }
+web_page *CreatePage(char *url)
+{
+	web_page *one_page = (T_webpage)malloc(sizeof(web_page));
+	if(!one_page)
+		return NULL;
+	one_page->url = malloc(sizeof(30));
+	if(!one_page->url)
+	{
+		free(one_page);
+		return NULL;
+	}
+	strcpy(one_page->url, url);
+	one_page->resources = get_page_resources(url, &one_page->num_res);
+	return one_page;
+}

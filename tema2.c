@@ -22,104 +22,22 @@ void delay(int number_of_seconds)
         ; 
 } 
 
-// void menu(char line[256], TLG first, int bandwidth, FILE *file_out)
-
-// {
-// 	int len;
-// 	len = strlen(line);
-// 	char *command;
-// 	int i;
-// 	int index_tab;
-// 	char *rest = line;
-// 	TLG p, current_tab;
-// 	int nr = 0;
-
-	// command = strtok_r(rest, " ", &rest);
-	// if ( line[len - 1] == '\n') {  //eliminare '\n' de la sfarsitul liniei citite 
-	// 	line[len - 1] = '\0';
-	// 	len --;
-	// }
-	// if(strcmp(command, "newtab") == 0)
-	// {
-	// 	newtab(&first, sizeof(T_tab));
-	// 	for(p = first; p != NULL; p=p->urm){
-	// 		if(p->urm == NULL)
-	// 		{
-	// 			current_tab = p;
-	// 		}
-	// 	}
-
-		
-	// 	//fputs(command, file_out);
-	//  }
-	
-	// else if(strcmp(command, "set_band") == 0)
-	// {
-	// 	bandwidth = atoi(rest);
-	// }
-	// else if(strcmp(command, "print_open_tabs") == 0)
-	// {
-	// 	print_open_tabs(&first);
-	// }
-	// else if(strcmp(command, "change_tab") == 0)
-	// {
-	// 		for(p = first; p != current_tab; p=p->urm)
-	// 		nr++;
-		
-	// 	printf("%d\n", nr);
-
-	// 	index_tab = atoi(rest);
-	// 	for(p = first, i = 0; p != NULL; p = p->urm, i++)
-	// 	{
-	// 		if(index_tab == i)
-	// 		{
-	// 			current_tab = p;
-	// 		}
-	// 	}
-		
-	// }
-
-	// else if(strcmp(command,"goto") == 0)
-	// {
-	// 	for(p = first; p != current_tab; p=p->urm)
-	// 		nr++;
-	// 	printf("%d\n", nr);
-	// }
-
-//}
-	// T_tab *info_tab =(T_tab*)current_tab->info;
-	// printf("aici\n");
-	// info_tab->current_page = CreatePage(rest);
-	// 	for(p = first; p != current_tab; p=p->urm)
-	// 		nr++;
-	// 	printf("%d\n", nr);
-	// }
-//}
-
-
 int main(int args, char* arg[])
 
 {
 
 	FILE *file_in, *file_out;
-	file_in = fopen(arg[1], "r");
-	file_out = fopen(arg[2], "w");
+	file_in = fopen(arg[1], "rt");
+	file_out = fopen(arg[2], "wt");
 	char line[256];
-	int bandwidth = 1024;
+	int bandwidth;
+	bandwidth = 1024;
+	int index_tab = 0;
+	int i;
 	TLG first;
-	int len;
-	len = strlen(line);
 	char *command;
-	//int i;
-	//int index_tab = 0;
 	TLG p;
-	//TLG current_tab = NULL;
-	int nr = 0;
-
-	//newtab(&first, sizeof(T_tab));
-
-	//TLG p = *first;
-	//TLG ultim = NULL;
+	TLG current_tab = NULL;
 	TLG aux = (TLG)malloc(sizeof(TCelulaG));
 	if(!aux)
 		return 0;
@@ -143,6 +61,7 @@ int main(int args, char* arg[])
 	info_tab->forward_stack = NULL;
 	aux->urm = NULL;
 	first = aux;
+	int nr;
 	p = first;
 
 	if(file_in == NULL)
@@ -153,57 +72,71 @@ int main(int args, char* arg[])
 	{
 		while(fgets(line, 256, file_in) != NULL)
 		{
-			
-			//fputs(line[0], file_out);
 			char *rest = line;
-			command = strtok_r(rest, " ", &rest);
-			if ( line[len - 1] == '\n') {  //eliminare '\n' de la sfarsitul liniei citite 
-				line[len - 1] = '\0';
-				len --;
-			}
-		//	printf("%s\n", command);
-			if(strcmp(command, "newtab") == 0)
+			command = strtok_r(rest, "\n", &rest);
+			char *first_word = strtok_r(command, " ", &command);
+			if(strcmp(first_word, "newtab") == 0)
 			{
-			
-				for(p = first; p != NULL; p = p->urm);
-					p->urm = newtab(sizeof(T_tab));
-				
-				for(p = first; p != NULL; p=p->urm)
-					nr++;
-				printf("%d\n", nr);
+				for(p = first; p->urm != NULL; p = p->urm);//parcurg lista pana ajung pe ultima celula diferita de null,adica p->urm == null
+				p->urm = newtab(sizeof(T_tab));//adaug celula noua la sfarsit
+				current_tab = p->urm;
 			}
+			else if(strcmp(first_word, "set_band") == 0)
+			{
+				bandwidth = atoi(command);
+			}
+			else if(strcmp(first_word, "print_open_tabs") == 0)
+			{
+				print_open_tabs(first);
+			}
+			else if(strcmp(first_word, "change_tab") == 0)
+			{
+			index_tab = atoi(command);
+			i = 0;
+			for(p = first; p != NULL; p = p->urm)
+			{
+				if(index_tab == i)
+				{
+					current_tab = p;
+				}
+				i++;
+			}	
+			}
+			else if(strcmp(first_word, "goto") == 0)
+			{
 
-				// for(p = first; p != NULL; p=p->urm)
-				// 	nr++;
-				// printf("%d\n", nr);
-		
-		//fputs(command, file_out);
-		 
-			// else if(strcmp(command, "set_band") == 0)
-			// {
-			// 	bandwidth = atoi(rest);
-			// }
-			// else if(strcmp(command, "print_open_tabs") == 0)
-			// {
-			// 	print_open_tabs(first);
-			// }
-			// else if(strcmp(command, "change_tab") == 0)
-			// {
-			// 	// for(p = first; p != current_tab; p=p->urm)
-			// 	// nr++;
-		
-			// 	// printf("%d\n", nr);
+				delay(1); // intarziere cu o secunda
+				T_tab *info_tab = (T_tab*)(current_tab->info);
+				if(info_tab->current_page != NULL)
+				{
+				
+					if(info_tab->back_stack == NULL) // daca este prima pagina accesata din acel tab
+					{
 
-			// index_tab = atoi(rest);
-			// for(p = first, i = 0; p != NULL; p = p->urm, i++)
-			// {
-			// 	if(index_tab == i)
-			// 	{
-			// 		current_tab = p;
-			// 	}
-			// }
-		
-			// }
+						info_tab->back_stack = InitS(sizeof(web_page)); // creeaza stiva de back
+						Push(info_tab->back_stack, info_tab->current_page); // adauga pagina curenta in stiva de back
+						info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent
+					}
+
+					else
+					{
+						Push(info_tab->back_stack, info_tab->current_page); // adauga pagina curenta in stiva de back
+						info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent	
+					}
+				}
+				
+				if(info_tab->current_page == NULL)
+					info_tab->current_page = CreatePage(command);
+			 // TStiva* s = (TStiva*)(info_tab->back_stack);
+			 // nr = 0;
+			 // TLG g;
+			 // if(s->vf)
+			 // 	nr++;
+			 // printf("%d\n", nr);
+
+			}
+				
+			
 		}
 
 	fclose(file_in);
@@ -213,4 +146,3 @@ fclose(file_out);
 
 return 0;
 }
-
