@@ -48,10 +48,10 @@ typedef struct tab
 
 /* definire functii utilizate */
 
-//void menu(char line[256], TLG first, int bandwidth, FILE *file_out);
+void *InitS(size_t d);
+int Push(void *S, void *element);
 TLG newtab(size_t d);
 void print_open_tabs(TLG first_tab);
 web_page *CreatePage(char *url);
-void go_to(TLG *current_tab, char *name_url);
 
 #endif
