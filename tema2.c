@@ -111,7 +111,7 @@ int main(int args, char* arg[])
 				T_tab *info_tab = (T_tab*)(current_tab->info);
 				if(info_tab->current_page == NULL)
 				  info_tab->current_page = CreatePage(command);
-
+				else{
 				if(info_tab->back_stack == NULL) // daca este prima pagina accesata din acel tab
 				{	
 					info_tab->back_stack = InitS(sizeof(web_page)); // creeaza stiva de back
@@ -124,12 +124,8 @@ int main(int args, char* arg[])
 					info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent	
 				}
 				
-			  TStiva* s = (TStiva*)(info_tab->back_stack);
-			  nr = 0;
-			  if(s->vf)
-			  	nr++;
-			  
-			  printf("%d\n",nr);
+				}
+			
 
 			}
 				
