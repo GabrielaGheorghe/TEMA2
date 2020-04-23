@@ -60,9 +60,11 @@ int main(int args, char* arg[])
 	info_tab->back_stack = NULL;
 	info_tab->forward_stack = NULL;
 	aux->urm = NULL;
+	aux->info = info_tab;
 	first = aux;
 	int nr;
 	p = first;
+	current_tab = p;
 
 	if(file_in == NULL)
 		printf("Fisierul de intrare nu a putut fi deschis\n");
@@ -105,14 +107,14 @@ int main(int args, char* arg[])
 			else if(strcmp(first_word, "goto") == 0)
 			{
 
-				delay(1); // intarziere cu o secunda
+				//delay(1); intarziere cu o secunda
 				T_tab *info_tab = (T_tab*)(current_tab->info);
 				if(info_tab->current_page != NULL)
 				{
-				
+					
 					if(info_tab->back_stack == NULL) // daca este prima pagina accesata din acel tab
 					{
-
+						
 						info_tab->back_stack = InitS(sizeof(web_page)); // creeaza stiva de back
 						Push(info_tab->back_stack, info_tab->current_page); // adauga pagina curenta in stiva de back
 						info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent
@@ -124,9 +126,9 @@ int main(int args, char* arg[])
 						info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent	
 					}
 				}
-				
-				if(info_tab->current_page == NULL)
-					info_tab->current_page = CreatePage(command);
+				else
+				  info_tab->current_page = CreatePage(command);
+
 			 // TStiva* s = (TStiva*)(info_tab->back_stack);
 			 // nr = 0;
 			 // TLG g;
