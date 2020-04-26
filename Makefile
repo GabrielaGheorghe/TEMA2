@@ -13,3 +13,5 @@ run:
 	./main
 clean:
 	rm -f *.o main
+check:
+	valgrind --leak-check=full ./main 1.in 1.out

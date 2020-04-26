@@ -74,7 +74,7 @@ int main(int args, char* arg[])
 	{
 		while(fgets(line, 256, file_in) != NULL)
 		{
-			//printf("%s\n", line);
+			//printf("%s", line);
 			char *rest = line;
 			command = strtok_r(rest, "\n", &rest);
 			char *first_word = strtok_r(command, " ", &command);
@@ -109,40 +109,23 @@ int main(int args, char* arg[])
 			{
 
 				TLG ant = NULL;
-				//int nr  = 0;
-				// for(p = first; p != NULL; p = p->urm)
-				// 	nr++;
-				// printf("%d\n", nr);
-				for(p = first, ant = p; p != NULL; ant = p, p = p -> urm)
-				{
-		
-				if(p->urm == NULL)
+				for(p = first, ant = NULL; p->urm != NULL; ant = p, p = p -> urm);
+	
+				if(p == current_tab)
 				{
 
-					if(p == current_tab)
-					{
-
-						DelTab(p->info);			
-						free(p);
-						ant->urm = NULL;
-						current_tab = ant;
+					DelTab(p->info);			
+					free(p);
+					ant->urm = NULL;
+					current_tab = ant;
 					}
-					else
-					{
-						
-						DelTab(p->info);
-						free(p);
-						ant->urm = NULL;
+				else
+					{		
+					DelTab(p->info);
+					free(p);
+					ant->urm = NULL;
 					}
-				}	
-							//printf("aici\n");
-				}
-				int nr = 0;
-			for(p = first; p != NULL; p = p->urm)
-			{
-				nr++;
-				printf("%d\n", nr);
-			}
+									
 			}
 			else if(strcmp(first_word, "goto") == 0)
 			{
