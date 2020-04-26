@@ -26,13 +26,14 @@ int main(int args, char* arg[])
 	char *command;
 	TLG p;
 	int nr_entries;
+	web_page* old_current_page = malloc(sizeof(web_page));
 	
 	TLG current_tab = NULL;
 	void* queue = NULL;
 	queue = InitQ(30);
 	void* priorities_queue = NULL;
-	
 	priorities_queue = InitQ(sizeof(Resource));
+	TCoada *coada = (TCoada*)priorities_queue;
 	
 	TLG aux = (TLG)malloc(sizeof(TCelulaG));
 	if(!aux)
@@ -114,7 +115,7 @@ int main(int args, char* arg[])
 				if(p == current_tab)
 				{
 
-					DelTab(p->info);			
+					DelTab(p->info);		
 					free(p);
 					ant->urm = NULL;
 					current_tab = ant;
@@ -131,20 +132,21 @@ int main(int args, char* arg[])
 			{
 				number_bytes = bandwidth;
 				remaining_bytes = 0;
-				TCoada *coada = (TCoada*)priorities_queue;
 				TLG q = coada->ic;
 				void *el = malloc(sizeof(Resource));
 				TLG last_downloaded = NULL;
 
 				T_tab *info_tab = (T_tab*)(current_tab->info);
 				if(info_tab->current_page == NULL)
-				{	
+				{
+							
 				  info_tab->current_page = CreatePage(command);
 				  InsQ(queue, info_tab->current_page->url);
 				}
 
 				else
 				{
+		
 				if(info_tab->back_stack == NULL) // daca este prima pagina accesata din acel tab
 				{	
 					info_tab->back_stack = InitS(sizeof(web_page)); // creeaza stiva de back
@@ -160,13 +162,13 @@ int main(int args, char* arg[])
 				}
 				}
 
+
 				for(q = coada->ic; q != NULL; ) // se incepe descarcarea resurselor
 				{
 					
 					remaining_bytes = ((Resource*)q->info)->dimension - ((Resource*)q->info)->currently_downloaded;
 					if(number_bytes >= remaining_bytes)
 					{
-
 						number_bytes = number_bytes - remaining_bytes;
 						if(L == NULL)
 						{
@@ -178,12 +180,12 @@ int main(int args, char* arg[])
 							if(coada->ic == coada->sc)
 							{
 								ExtrLastQ(coada, el);
-								free(el);
+								//free(el);
 							}
 							else
 							{
 								ExtrQ(coada, el);
-								free(el);
+								//free(el);
 							}
 						}
 
@@ -208,7 +210,7 @@ int main(int args, char* arg[])
 					else if(number_bytes < remaining_bytes)
 					{
 						remaining_bytes = remaining_bytes - number_bytes;
-						((Resource*)(q->info))->currently_downloaded = number_bytes;
+						((Resource*)(q->info))->currently_downloaded += number_bytes;
 						number_bytes = 0;
 					}
 
@@ -216,46 +218,62 @@ int main(int args, char* arg[])
 					break;
 				q = coada->ic;
 				}
-				// golirea stivei de forward
-				void *element = (TLG)malloc(sizeof(TCelulaG));
-				if(!element)
-					return 0;
+
+		//		info_tab->forward_stack = InitS(sizeof(web_page));
+				//golirea stivei de forward
+				free(info_tab->forward_stack);
+				web_page *elem;
 				if(info_tab->forward_stack)
 				{
-					while(((TStiva*)info_tab->forward_stack)->vf->urm)
-					{
-						Pop(info_tab->forward_stack, element);
-					}
+					
+				while(((TStiva*)info_tab->forward_stack)->vf->urm)
+				{
+					elem  = malloc(sizeof(web_page));
+					if(!elem)
+						return 0;
+					Pop(info_tab->forward_stack, elem);
+					free(elem);
 				}
-				
+				free(((TStiva*)info_tab->forward_stack)->vf);
+				}
 			}
 			else if(strcmp(first_word, "back") == 0)
 			{
 				T_tab *info_tab = (T_tab*)(current_tab->info);
 				if(info_tab->back_stack != NULL)
 				{
-					web_page* old_current_page = info_tab->current_page;
-					Pop(info_tab->back_stack, info_tab->current_page);
+					 old_current_page = info_tab->current_page;
 					if(info_tab->forward_stack == NULL)
 					{
 						info_tab->forward_stack = InitS(sizeof(web_page));
 						Push(info_tab->forward_stack, old_current_page);
+						Pop(info_tab->back_stack, info_tab->current_page);
+
 					}
 					else
 						Push(info_tab->forward_stack, old_current_page);
+					
+				
 				}
 				else
 					printf("can't go back, no pages in stack.\n");
-				
+				//printf("%s\n",info_tab->current_page->url);
 			}
 			else if(strcmp(first_word, "forward") == 0)
 			{
 				T_tab *info_tab = (T_tab*)(current_tab->info);
 				if(info_tab->forward_stack != NULL)
 				{
-					web_page* new_current_page = info_tab->current_page;
-					Push(info_tab->back_stack, new_current_page);
+
+					web_page *new_current_page = malloc(sizeof(web_page));
+					if(!new_current_page)
+						return 0;
+
+					new_current_page = info_tab->current_page;
 					Pop(info_tab->forward_stack, info_tab->current_page);
+
+					Push(info_tab->back_stack, new_current_page);
+					
 				}
 					
 				else
@@ -408,8 +426,9 @@ int main(int args, char* arg[])
 			{
 				number_seconds = atoi(command);
 				number_bytes = number_seconds*bandwidth;
+				//printf("%d\n", number_bytes);
 				remaining_bytes = 0;
-				TCoada *coada = (TCoada*)priorities_queue;
+				//TCoada *coada = (TCoada*)priorities_queue;
 				TLG q = coada->ic;
 				void *el = malloc(sizeof(Resource));
 				TLG last_downloaded = NULL;
@@ -419,6 +438,7 @@ int main(int args, char* arg[])
 				{
 					
 					remaining_bytes = ((Resource*)q->info)->dimension - ((Resource*)q->info)->currently_downloaded;
+					//printf("%d\n", remaining_bytes);
 					if(number_bytes >= remaining_bytes)
 					{
 
@@ -461,8 +481,10 @@ int main(int args, char* arg[])
 					}
 					else if(number_bytes < remaining_bytes)
 					{
+						//printf("%d\n", remaining_bytes);
 						remaining_bytes = remaining_bytes - number_bytes;
-						((Resource*)(q->info))->currently_downloaded = number_bytes;
+						((Resource*)(q->info))->currently_downloaded += number_bytes;
+					//	printf("%d\n", ((Resource*)(q->info))->currently_downloaded);
 						number_bytes = 0;
 					}
 

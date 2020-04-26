@@ -163,6 +163,7 @@ int Push(void *S, void *element)
 		free(aux);
 		return 0;
 	}
+	//aux->info = element;
 	memcpy(aux->info, element, ((TStiva*)S)->dime);
 	aux->urm = ((TStiva*)S)->vf;
 	((TStiva*)S)->vf = aux;
@@ -269,35 +270,6 @@ TLG AlocaCelula(void *x)
 	return aux;
 }
 
-// void ElibereazaStructPage(void *p)
-// {
-// 	web_page *page = (web_page*)p;
-// 	free(page->url);
-// 	free(page->resources);
-// }
-
-// void DistrugeLG(TLG *L, void(*ELimEL)(void*))
-// {
-// 	TLG p = *L;
-// 	TLG aux;
-// 	while(p != NULL)
-// 	{
-// 		aux = p;
-// 		p = p->urm;
-// 		ELimEL(aux->info);
-// 		free(aux);
-// 	}
-// 	*L = NULL;
-// }
-
-// void ResetS(TStiva *s)
-// {
-// 	TLG l;
-// 	l = s->vf;
-// 	DistrugeLG(&l, ElibereazaStructPage);
-// 	s->vf = NULL;
-// }
-
 void DelTab(void* x)
 {
 
@@ -308,12 +280,12 @@ void DelTab(void* x)
 		return;
 	// if(!tab->current_page)
 	// 	return;
-	if(tab->current_page != NULL)
-	{
-	free(tab->current_page->url);
-	free(tab->current_page->resources);
-	free(tab->current_page);
-	}
+	// if(tab->current_page != NULL)
+	// {
+	// free(tab->current_page->url);
+	// free(tab->current_page->resources);
+	// free(tab->current_page);
+	// }
 
 	if(tab->back_stack)
 	{
@@ -325,12 +297,15 @@ void DelTab(void* x)
 				return;
 		Pop(tab->back_stack, elem);
 		free(elem);
+
 		}
 	free(((TStiva*)tab->back_stack)->vf);
+	free(tab->back_stack);
 	}
 
 	if(tab->forward_stack)
 	{
+		//printf("aici\n");
 		while(((TStiva*)tab->forward_stack)->vf->urm)
 		{
 			elem  = malloc(sizeof(web_page));
@@ -340,7 +315,7 @@ void DelTab(void* x)
 		free(elem);
 		}
 	free(((TStiva*)tab->forward_stack)->vf);
-	}
-	free(tab->back_stack);
 	free(tab->forward_stack);
+	}
+	
 }
