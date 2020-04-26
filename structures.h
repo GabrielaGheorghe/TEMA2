@@ -34,6 +34,14 @@ typedef struct stiva
 	TLG vf; // adresa celulei din varf
 }TStiva, *ASt;
 
+// coada
+
+typedef struct coada
+{
+	size_t dime;
+	TLG ic, sc;
+}TCoada, *AQ;
+
 // tab
 
 typedef struct tab
@@ -49,9 +57,22 @@ typedef struct tab
 /* definire functii utilizate */
 
 void *InitS(size_t d);
+void *InitQ(size_t d);
+int InsQ(void *Q, void *element);
+int InsQVida(void *Q, void *element);
+int InsQNevida(void *Q, void *element);
+int InsQNevidaInc(void *Q, void *element);
 int Push(void *S, void *element);
+int ExtrQ(void *Q, void *el);
+int ExtrLastQ(void *Q, void *el);
+int Pop(void *S, void *element);
 TLG newtab(size_t d);
-void print_open_tabs(TLG first_tab);
+void print_open_tabs(TLG first_tab, FILE *out);
 web_page *CreatePage(char *url);
+TLG AlocaCelula(void *x);
+//void ElibereazaStructPage(void *p);
+void DelTab(void* x);
+// void DistrugeLG(TLG *L, void(*ELimEL)(void*));
+// void ResetS(TStiva *s);
 
 #endif
