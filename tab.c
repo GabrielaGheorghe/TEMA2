@@ -278,8 +278,9 @@ void DelTab(void* x)
 	elem  = malloc(sizeof(web_page));
 	if(!elem)
 		return;
-	// if(!tab->current_page)
-	// 	return;
+
+	if(!tab->current_page)
+		return;
 	// if(tab->current_page != NULL)
 	// {
 	// free(tab->current_page->url);
@@ -287,35 +288,37 @@ void DelTab(void* x)
 	// free(tab->current_page);
 	// }
 
-	if(tab->back_stack)
-	{
+	//if(tab->back_stack)
+	//{
 
-		while(((TStiva*)tab->back_stack)->vf->urm)
-		{
-			elem  = malloc(sizeof(web_page));
-			if(!elem)
-				return;
-		Pop(tab->back_stack, elem);
-		free(elem);
+		// while(((TStiva*)tab->back_stack)->vf->urm)
+		// {
 
-		}
-	free(((TStiva*)tab->back_stack)->vf);
-	free(tab->back_stack);
-	}
-
-	if(tab->forward_stack)
-	{
+		// 	// elem  = malloc(sizeof(web_page));
+		// 	// if(!elem)
+		// 	// 	return;
+		// Pop(tab->back_stack, elem);
+		// //free(elem);
 		//printf("aici\n");
-		while(((TStiva*)tab->forward_stack)->vf->urm)
-		{
-			elem  = malloc(sizeof(web_page));
-			if(!elem)
-				return;
-		Pop(tab->forward_stack, elem);
-		free(elem);
-		}
-	free(((TStiva*)tab->forward_stack)->vf);
+	//	}
+	//free(((TStiva*)tab->back_stack)->vf);
+	 free(tab->back_stack);
+
+	//}
+
+	// if(tab->forward_stack)
+	// {
+		
+		// while(((TStiva*)tab->forward_stack)->vf->urm)
+		// {
+		// 	// elem  = malloc(sizeof(web_page));
+		// 	// if(!elem)
+		// 	// 	return;
+		// Pop(tab->forward_stack, elem);
+		// //free(elem);
+		//}
+//	free(((TStiva*)tab->forward_stack)->vf);
 	free(tab->forward_stack);
-	}
+	//}
 	
 }
