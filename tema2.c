@@ -135,33 +135,34 @@ int main(int args, char* arg[])
 				TLG q = coada->ic;
 				void *el = malloc(sizeof(Resource));
 				TLG last_downloaded = NULL;
-
+				printf("go o %s\n",command);
 				T_tab *info_tab = (T_tab*)(current_tab->info);
 				if(info_tab->current_page == NULL)
 				{
-							
+				  printf("nula %s\n",command);
 				  info_tab->current_page = CreatePage(command);
 				  InsQ(queue, info_tab->current_page->url);
 				}
-
 				else
 				{
-		
 				if(info_tab->back_stack == NULL) // daca este prima pagina accesata din acel tab
 				{	
 					info_tab->back_stack = InitS(sizeof(web_page)); // creeaza stiva de back
+			
 					Push(info_tab->back_stack, info_tab->current_page); // adauga pagina curenta in stiva de back
 					info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent
+					
 					InsQ(queue, info_tab->current_page->url);
 				}
 				else
 				{
 					Push(info_tab-> back_stack, info_tab->current_page); // adauga pagina curenta in stiva de back
+					
 					info_tab->current_page = CreatePage(command); // incarca o noua pagina in tab-ul curent	
+					
 					InsQ(queue, info_tab->current_page->url);
 				}
 				}
-
 
 				for(q = coada->ic; q != NULL; ) // se incepe descarcarea resurselor
 				{
@@ -242,18 +243,18 @@ int main(int args, char* arg[])
 				T_tab *info_tab = (T_tab*)(current_tab->info);
 				if(info_tab->back_stack != NULL)
 				{
-					 old_current_page = info_tab->current_page;
+					old_current_page = info_tab->current_page;
 					if(info_tab->forward_stack == NULL)
 					{
 						info_tab->forward_stack = InitS(sizeof(web_page));
 						Push(info_tab->forward_stack, old_current_page);
 						Pop(info_tab->back_stack, info_tab->current_page);
-
+						
 					}
-					else
+					else{
 						Push(info_tab->forward_stack, old_current_page);
-					
-				
+						Pop(info_tab->back_stack, info_tab->current_page);
+					}
 				}
 				else
 					printf("can't go back, no pages in stack.\n");
