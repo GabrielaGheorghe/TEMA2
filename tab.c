@@ -150,7 +150,7 @@ int ExtrLastQ(void *Q, void *el)
 	return 1;	
 }
 
-// adaugare element in stiva
+// adaugare element in stiv
 
 int Push(void *S, void *element)
 {
