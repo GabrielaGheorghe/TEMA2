@@ -219,23 +219,23 @@ int main(int args, char* arg[])
 					break;
 				q = coada->ic;
 				}
-			//	info_tab->forward_stack = InitS(sizeof(web_page));
+				//info_tab->forward_stack = InitS(sizeof(web_page));
 				//golirea stivei de forward
 		
-				// web_page *elem;
-				// if(info_tab->forward_stack)
-				// {
+				web_page *elem;
+				if(info_tab->forward_stack)
+				 {
 					
-				// while(((TStiva*)info_tab->forward_stack)->vf->urm)
-				// {
-				// 	elem  = malloc(sizeof(web_page));
-				// 	if(!elem)
-				// 		return 0;
-				// 	Pop(info_tab->forward_stack, elem);
-				// 	free(elem);
-				// }
-				// free(((TStiva*)info_tab->forward_stack)->vf);
-				// }
+				while(((TStiva*)info_tab->forward_stack)->vf)
+				{
+				 	elem  = malloc(sizeof(web_page));
+				 	if(!elem)
+				 		return 0;
+				 	Pop(info_tab->forward_stack, elem);
+				 	free(elem);
+				}
+				 free(((TStiva*)info_tab->forward_stack)->vf);
+				}
 			}
 			else if(strcmp(first_word, "back") == 0)
 			{
@@ -285,7 +285,9 @@ int main(int args, char* arg[])
 				{
 				char *info = (char*)(q->info);
 				fprintf(file_out, "%s\n", info);
+				printf("history %s ",info);
 				}
+				printf("\n");
 			}
 			else if(strcmp(first_word, "del_history") == 0)
 			{
